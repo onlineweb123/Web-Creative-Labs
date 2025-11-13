@@ -1,1 +1,402 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Web Creative Lab</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="./manifest.json">
+    <link rel='stylesheet' href='./style.css'>
+    <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon">
+    <script>
+        if('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./service-worker.js');
+        };
+    </script>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="PWA Example">
+    <link rel="apple-touch-icon" href="icon-152x152.png">
+    <meta name="msapplication-TileImage" content="icon-144x144.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+
+
+     <style>
+        /* 1. Global Reset & Light Theme */
+        :root {
+            --light-bg: #f5f5f5; /* Light Gray/White Background */
+            --card-bg: #ffffff; /* Pure White Card */
+            --text-primary: #1c1c1c; /* Dark Text */
+            --text-secondary: #666666; /* Gray Secondary Text */
+            --accent-yellow: #ffc107;
+            --accent-blue: #1a73e8;
+            --nav-bg: #ffffff; /* White Nav Bar */
+            --shadow: rgba(0, 0, 0, 0.1); /* Lighter Shadow */
+            --border-color: #e0e0e0;
+
+            /* 🎨 New Color Variables for Icons 🎨 */
+            --color-red: #e53935;
+            --color-green: #4caf50;
+            --color-blue: #2196f3;
+            --color-purple: #9c27b0;
+            --color-orange: #ff9800;
+            --color-teal: #00bcd4;
+            --color-pink: #e91e63;
+        }
+
+        /* Hide scrollbars */
+        ::-webkit-scrollbar { width: 0; height: 0; }
+        html, body { scrollbar-width: none; -ms-overflow-style: none; }
+
+        body {
+            margin: 0;
+            font-family: 'Noto Sans Tamil', sans-serif; 
+            background: var(--light-bg);
+            color: var(--text-primary);
+            scroll-behavior: smooth;
+            padding-bottom: 70px; /* Space for fixed bottom nav */
+        }
+
+        /* 2. Top Header (Indus Appstore Bar) */
+        .app-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 15px 10px;
+            background: var(--card-bg);
+            position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 1px 5px var(--shadow);
+            border-bottom: 1px solid var(--border-color); 
+        }
+        .app-header-left { display: flex; align-items: center; }
+        .app-logo-text { color: var(--text-primary); font-size: 1.4em; font-weight: 700; margin-left: 8px; }
+        .app-logo-icon { width: 25px; height: 25px; border-radius: 5px; background: linear-gradient(135deg, #a43aef, #ff66d9); }
+        .user-icon { width: 35px; height: 35px; border-radius: 50%; background: var(--light-bg); border: 1px solid var(--border-color); color: var(--text-secondary); display: flex; justify-content: center; align-items: center; font-size: 1.2em; }
+
+        /* 3. Search Bar */
+        .search-bar {
+            padding: 10px 15px;
+            background: var(--card-bg); 
+            position: sticky; top: 60px; 
+            z-index: 90; 
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .search-form { display: flex; align-items: center; background: var(--light-bg); border-radius: 25px; padding: 0 15px; color: var(--text-secondary); border: 1px solid var(--border-color); }
+        .search-form span { margin-right: 10px; font-size: 1.2em; }
+        .search-input-field { flex-grow: 1; padding: 10px 0; border: none; outline: none; background: transparent; font-size: 1em; color: var(--text-primary); font-family: inherit; }
+        .search-input-field::placeholder { color: var(--text-secondary); font-weight: 400; }
+
+        /* 4. Filter Tabs - Hidden */
+        .filter-tabs {
+            display: none; 
+        }
+
+        /* 5. App Sections (Popular Apps) */
+        .app-section { padding: 15px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .section-header h3 { margin: 0; font-size: 1.2em; color: var(--text-primary); }
+        .section-header a { color: var(--text-secondary); text-decoration: none; font-size: 0.9em; }
+
+        .scroll-container { display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; }
+        .app-card { flex-shrink: 0; width: 100px; text-align: center; display: block; }
+
+        /* Icon Styling */
+        .app-icon-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            background: var(--icon-bg-default);
+            color: white; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); 
+            font-size: 2.5em; 
+        }
+        .snap-icon {
+            background: #ffeb3b;
+            color: #1c1c1c; 
+        }
+
+        /* App Name Text Styling */
+        .app-name-small {
+            margin: 0;
+            font-size: 1em; 
+            font-weight: 500; 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-top: 5px; 
+        }
+
+        .app-rating { display: flex; align-items: center; justify-content: center; font-size: 0.8em; color: var(--text-secondary); margin-top: 3px; }
+        .app-rating span { color: var(--accent-yellow); margin-right: 3px; }
+
+        /* Download/Open Link Styling (Now an <a> tag) */
+        .download-btn {
+            width: 75px; 
+            height: 35px;
+            background: var(--accent-blue); 
+            color: white; 
+            border: none;
+            border-radius: 18px; 
+            padding: 0;
+            margin-top: 5px;
+            cursor: pointer;
+            font-size: 0.9em; 
+            font-weight: 600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: auto;
+            margin-right: auto;
+            transition: background 0.2s, transform 0.1s;
+            text-decoration: none; /* ❗ Added for link styling ❗ */
+        }
+        .download-btn:active { background: #0d47a1; transform: scale(0.95); }
+        .app-rating + .download-btn { position: static; margin-left: auto; margin-right: auto; margin-top: 5px; }
+
+        /* 6. Bottom Navigation Bar */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; display: flex; justify-content: space-around; background: var(--nav-bg); border-top: 1px solid var(--border-color); padding: 10px 0; z-index: 1000; box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05); }
+        .nav-item { text-align: center; color: var(--text-secondary); font-size: 0.75em; padding: 5px; cursor: pointer; transition: color 0.2s; flex-grow: 1; }
+        .nav-item.active { color: var(--accent-blue); font-weight: 600; }
+        .nav-item div { font-size: 1.5em; margin-bottom: 3px; }
+
+    </style>
+
+</head>
+<body>
+
+    <div class="app-header">
+        <div class="app-header-left">
+            <div class="app-logo-icon"></div>
+            <span class="app-logo-text">Web Creative Lab</span>
+        </div>
+        <div class="user-icon">👤</div>
+    </div>
+
+    <div class="search-bar">
+        <form class="search-form" onsubmit="return false;"> 
+            <span>🔍</span>
+            <input type="text" id="searchInput" class="search-input-field" placeholder="Search for Apps, Games & more..." aria-label="Search for Apps, Games & more">
+        </form>
+    </div>
+
+    <div class="filter-tabs" id="filterTabs" style="display: none;">
+        </div>
+
+    <main id="appContent">
+        <div class="app-section">
+            <div class="section-header">
+                <h3>Popular Apps for You</h3>
+                <a href="#">›</a>
+            </div>
+            <div class="scroll-container">
+                <div class="app-card" data-app-name="snapchat">
+                    <div class="app-icon-img snap-icon">M</div> 
+                    <p class="app-name-small">Meadi Aqua</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.2 <small>• 79 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/Meadi-Aqua-Tech-Website-/" class="download-btn">Open</a>
+                </div>
+                <div class="app-card" data-app-name="truecaller">
+                    <div class="app-icon-img" style="background:var(--color-teal);">R</div>
+                    <p class="app-name-small">Relax to Order</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.4 <small>• 97 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/Relax-To-Order/" class="download-btn">Open</a>
+                </div>
+                <div class="app-card" data-app-name="zomato உணவு">
+                    <div class="app-icon-img" style="background:var(--color-red);">Z</div>
+                    <p class="app-name-small">Z Fitness</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.6 <small>• 38 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/Z-Fitness/" class="download-btn">Open</a>
+                </div>
+                <div class="app-card" data-app-name="applock பூட்டு">
+                    <div class="app-icon-img" style="background:var(--color-purple);">D</div>
+                    <p class="app-name-small">Dark Psychology</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.3 <small>• 4 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/Dark-Psychology-/" class="download-btn">Open</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-section">
+            <div class="section-header">
+                <h3>Let's Get Social</h3>
+                <a href="#">›</a>
+            </div>
+            <div class="scroll-container">
+                <div class="app-card" data-app-name="instagram">
+                    <div class="app-icon-img" style="background:var(--color-pink);">Q</div>
+                    <p class="app-name-small">QR Code</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.3 <small>• 2 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/QR-Code-Generator-/" class="download-btn">Open</a>
+                </div>
+                <div class="app-card" data-app-name="moj இந்தியாவின்">
+                    <div class="app-icon-img" style="background:var(--color-orange);">M</div>
+                    <p class="app-name-small"> Meditation Music</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.6 <small>• 165 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/Meditation-Music/" class="download-btn">Open</a>
+                </div>
+                <div class="app-card" data-app-name="facebook">
+                    <div class="app-icon-img" style="background:var(--color-blue);">S</div>
+                    <p class="app-name-small"> Shopping Calculator</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.2 <small>• 38 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/Shopping-Calculator-/" class="download-btn">Open</a>
+                </div>
+                <div class="app-card" data-app-name="connecto">
+                    <div class="app-icon-img" style="background:var(--color-green);">T</div>
+                    <p class="app-name-small">Tables Creat</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.0 <small>• 145 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/Tables-Creat/" class="download-btn">Open</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="app-section">
+            <div class="section-header">
+                <h3>Games You'll Love Playing</h3>
+                <a href="#">›</a>
+            </div>
+            <div class="scroll-container">
+                <div class="app-card" data-app-name="game title 1 விளையாட்டு">
+                    <div class="app-icon-img" style="background:#5D53F9;">B</div>
+                    <p class="app-name-small">Budget Calculator</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.5 <small>• 50 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/Budget-Calculator/" class="download-btn">Open</a>
+                </div>
+                <div class="app-card" data-app-name="game title 2">
+                    <div class="app-icon-img" style="background:#00A86B;">L</div>
+                    <p class="app-name-small">learn Maths</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.1 <small>• 80 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/Learning-Maths/" class="download-btn">Open</a>
+                </div>
+      <!-- புத்திய Apps ஆரம்பம் -->
+      <div class="app-card" data-app-name="game title 2">
+                    <div class="app-icon-img" style="background:#0004f8;">C</div>
+                    <p class="app-name-small">Color Picker</p>
+                    <div class="app-rating">
+                        <span>★</span> 4.1 <small>• 80 MB</small>
+                    </div>
+                    <a href="https://onlineweb123.github.io/Color-Picker-Website/" class="download-btn">Open</a>
+                </div>
+      <!-- புத்திய Apps முடிவு -->
+            </div>
+        </div>
+    </main>
+
+    <div id="noResultsMessage" style="text-align: center; color: var(--text-secondary); padding: 50px 15px; display: none;">
+        <p>தேடல் முடிவுகள் எதுவும் இல்லை. வேறொரு தேடல் வார்த்தையை முயற்சிக்கவும்.</p>
+    </div>
+
+   <div class="bottom-nav">
+    <div class="nav-item active" onclick="location.href='index.html'">
+        <div>🏠</div>
+        Home
+    </div>
+    <div class="nav-item" onclick="location.href='game.html'">
+        <div>🕹️</div>
+        Games
+    </div>
+    <div class="nav-item" onclick="location.href='explore.html'">
+        <div>🌐</div>
+        Explore
+    </div>
+
+</div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('searchInput');
+            const filterTabs = document.getElementById('filterTabs');
+            const appSections = document.querySelectorAll('.app-section');
+            const noResultsMessage = document.getElementById('noResultsMessage');
+
+            // Function to handle the search and filter the content
+            const handleSearch = () => {
+                const query = searchInput.value.trim().toLowerCase();
+                let totalResultsFound = 0;
+                let anySectionVisible = false;
+
+                if (query.length > 0) {
+                    // Filter tabs is already hidden in HTML/CSS, but keep this logic for safety
+                    filterTabs.style.display = 'none';
+
+                    appSections.forEach(section => {
+                        const appCards = section.querySelectorAll('.app-card');
+                        let sectionHasVisibleResults = false;
+
+                        appCards.forEach(card => {
+                            const appName = card.getAttribute('data-app-name') || '';
+
+                            if (appName.includes(query)) {
+                                card.style.display = 'block'; // Show card
+                                sectionHasVisibleResults = true;
+                                totalResultsFound++;
+                            } else {
+                                card.style.display = 'none'; // Hide card
+                            }
+                        });
+
+                        // Show or hide the entire section based on whether it contains visible cards
+                        if (sectionHasVisibleResults) {
+                            section.style.display = 'block';
+                            anySectionVisible = true;
+                        } else {
+                            section.style.display = 'none';
+                        }
+                    });
+
+                } else {
+                    // If the search query is empty, show all content
+                    filterTabs.style.display = 'none'; // Ensure it remains hidden
+                    appSections.forEach(section => {
+                        section.style.display = 'block';
+                        section.querySelectorAll('.app-card').forEach(card => {
+                            card.style.display = 'block';
+                        });
+                    });
+                    anySectionVisible = true; // Show all content
+                }
+
+                // Handle "No Results" message display
+                if (query.length > 0 && totalResultsFound === 0) {
+                    noResultsMessage.style.display = 'block';
+                } else {
+                    noResultsMessage.style.display = 'none';
+                }
+            };
+
+            // Add event listener for real-time filtering whenever the input changes
+            searchInput.addEventListener('input', handleSearch);
+
+            // Optional: Prevent form submission/page reload
+            searchInput.closest('form').addEventListener('submit', (e) => {
+                e.preventDefault();
+            });
+
+            // Initial check to ensure display is correct on load
+            handleSearch();
+        });
+    </script>
+
+</body>
+</html>
