@@ -9,7 +9,6 @@ var appShellFiles = [
     './game.html',
     './explore.html',
     './manifest.json',
-    './service-worker.js',
 ];
 
 self.addEventListener('install', function(e) {
