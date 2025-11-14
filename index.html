@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -329,60 +330,34 @@
             const appSections = document.querySelectorAll('.app-section');
             const noResultsMessage = document.getElementById('noResultsMessage');
 
-            // Function to handle the search and filter the content
+            //Function to handle the search and filter the content
             const handleSearch = () => {
-                const query = searchInput.value.trim().toLowerCase();
-                let totalResultsFound = 0;
-                let anySectionVisible = false;
+    const query = searchInput.value.trim().toLowerCase();
+    let totalResultsFound = 0;
 
-                if (query.length > 0) {
-                    // Filter tabs is already hidden in HTML/CSS, but keep this logic for safety
-                    filterTabs.style.display = 'none';
+    appSections.forEach(section => {
+        const appCards = section.querySelectorAll('.app-card');
+        let sectionHasVisibleResults = false;
 
-                    appSections.forEach(section => {
-                        const appCards = section.querySelectorAll('.app-card');
-                        let sectionHasVisibleResults = false;
+        appCards.forEach(card => {
+            const appName = (card.getAttribute('data-app-name') || '').toLowerCase();
+            const visibleName = (card.querySelector('.app-name-small')?.innerText || '').toLowerCase();
 
-                        appCards.forEach(card => {
-                            const appName = card.getAttribute('data-app-name') || '';
+            if (appName.includes(query) || visibleName.includes(query)) {
+                card.style.display = 'block';
+                sectionHasVisibleResults = true;
+                totalResultsFound++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
 
-                            if (appName.includes(query)) {
-                                card.style.display = 'block'; // Show card
-                                sectionHasVisibleResults = true;
-                                totalResultsFound++;
-                            } else {
-                                card.style.display = 'none'; // Hide card
-                            }
-                        });
+        section.style.display = sectionHasVisibleResults ? 'block' : 'none';
+    });
 
-                        // Show or hide the entire section based on whether it contains visible cards
-                        if (sectionHasVisibleResults) {
-                            section.style.display = 'block';
-                            anySectionVisible = true;
-                        } else {
-                            section.style.display = 'none';
-                        }
-                    });
-
-                } else {
-                    // If the search query is empty, show all content
-                    filterTabs.style.display = 'none'; // Ensure it remains hidden
-                    appSections.forEach(section => {
-                        section.style.display = 'block';
-                        section.querySelectorAll('.app-card').forEach(card => {
-                            card.style.display = 'block';
-                        });
-                    });
-                    anySectionVisible = true; // Show all content
-                }
-
-                // Handle "No Results" message display
-                if (query.length > 0 && totalResultsFound === 0) {
-                    noResultsMessage.style.display = 'block';
-                } else {
-                    noResultsMessage.style.display = 'none';
-                }
-            };
+    noResultsMessage.style.display =
+        (query.length > 0 && totalResultsFound === 0) ? 'block' : 'none';
+};
 
             // Add event listener for real-time filtering whenever the input changes
             searchInput.addEventListener('input', handleSearch);
