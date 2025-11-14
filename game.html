@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -32,7 +33,7 @@
             scroll-behavior: smooth;
             padding-bottom: 70px; /* Space for fixed bottom nav */
         }
-        
+
         /* 2. Top Header (Indus Appstore Bar) */
         .app-header {
             display: flex; justify-content: space-between; align-items: center;
@@ -46,7 +47,7 @@
         .app-logo-text { color: var(--text-primary); font-size: 1.4em; font-weight: 700; margin-left: 8px; }
         .app-logo-icon { width: 25px; height: 25px; border-radius: 5px; background: linear-gradient(135deg, #a43aef, #ff66d9); }
         .user-icon { width: 35px; height: 35px; border-radius: 50%; background: var(--light-bg); border: 1px solid var(--border-color); color: var(--text-secondary); display: flex; justify-content: center; align-items: center; font-size: 1.2em; }
-        
+
         /* 3. Search Bar */
         .search-bar {
             padding: 10px 15px;
@@ -58,7 +59,7 @@
         .search-form span { margin-right: 10px; font-size: 1.2em; }
         .search-input-field { flex-grow: 1; padding: 10px 0; border: none; outline: none; background: transparent; font-size: 1em; color: var(--text-primary); font-family: inherit; }
         .search-input-field::placeholder { color: var(--text-secondary); font-weight: 400; }
-        
+
         /* 5. App Sections & Cards */
         .app-section { padding: 15px; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -76,7 +77,7 @@
         .app-name-small { margin: 0; font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 5px; }
         .app-rating { display: flex; align-items: center; justify-content: center; font-size: 0.8em; color: var(--text-secondary); margin-top: 3px; }
         .app-rating span { color: var(--accent-yellow); margin-right: 3px; }
-        
+
         /* DOWNLOAD LINK/BUTTON STYLES (for <a> tag) */
         .download-btn { 
             width: 75px; 
@@ -137,7 +138,7 @@
             margin: 0;
             color: var(--text-primary);
         }
-        
+
         /* 6. Bottom Navigation Bar */
         .bottom-nav {
             position: fixed;
@@ -169,11 +170,11 @@
             font-size: 1.5em;
             margin-bottom: 3px;
         }
-        
+
     </style>
 </head>
 <body>
-    
+
     <div class="app-header">
         <div class="app-header-left">
             <div class="app-logo-icon"></div>
@@ -181,22 +182,22 @@
         </div>
         <div class="user-icon">👤</div>
     </div>
-    
+
     <div class="search-bar">
         <form class="search-form" onsubmit="return false;"> 
             <span>🔍</span>
             <input type="text" id="searchInput" class="search-input-field" placeholder="Search Games & more..." aria-label="Search Games & more">
         </form>
     </div>
-    
+
     <main id="mainContent">
-        
+
         <section id="gamesView" class="page-view">
             <div id="gamesHeader" style="padding: 15px 15px 0;">
                 <h2 style="font-size: 1.5em; margin-bottom: 5px;">விளையாட்டு பிரிவுகள் (Game Categories)</h2>
                 <p style="color: var(--text-secondary); margin-top: 0;">உங்களுக்குப் பிடித்த விளையாட்டைத் தேர்வுசெய்யுங்கள்.</p>
             </div>
-            
+
             <div class="category-grid" id="categoryGrid">
                 <div class="category-card" data-category-name="action ஆக்ஷன்" style="background-color: #ffe0b2;" onclick="window.location.href='https://onlineweb123.github.io/Mind-Game/'">
                     <div class="category-icon" style="background-color: #ff9800;">👆</div>
@@ -206,11 +207,11 @@
                     <div class="category-icon" style="background-color: #4caf50;">🏎️</div>
                     <p class="category-name">Car Game</p>
                 </div>
-                <div class="category-card" data-category-name="puzzle புதிர்" style="background-color: #bbdefb;" onclick="window.location.href='https://example.com/category/puzzle'">
+                <div class="category-card" data-category-name="puzzle புதிர்" style="background-color: #bbdefb;" onclick="window.location.href='https://onlineweb123.github.io/Memory-Game/'">
                     <div class="category-icon" style="background-color: #2196f3;">🧠</div>
                     <p class="category-name">Memory Game(Puzzle)</p>
                 </div>
-                <div class="category-card" data-category-name="sports விளையாட்டு" style="background-color: #f8bbd0;" onclick="window.location.href='https://onlineweb123.github.io/Memory-Game/'">
+                <div class="category-card" data-category-name="sports விளையாட்டு" style="background-color: #f8bbd0;" onclick="window.location.href='https://example.com/category/puzzle'">
                     <div class="category-icon" style="background-color: #e91e63;">⚽</div>
                     <p class="category-name">விளையாட்டு (Sports)</p>
                 </div>
@@ -250,13 +251,13 @@
                     </div>
                 </div>
             </div>
-            
+
         </section>
-        
+
         <div id="noResultsMessage" style="text-align: center; color: var(--text-secondary); padding: 50px 15px; display: none;">
             <p>தேடல் முடிவுகள் எதுவும் இல்லை. வேறொரு தேடல் வார்த்தையை முயற்சிக்கவும்.</p>
         </div>
-        
+
     </main>
 
     <div class="bottom-nav">
@@ -273,9 +274,9 @@
             Explore
         </div>
     </div>
-     
 
-    
+
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const searchInput = document.getElementById('searchInput');
@@ -289,7 +290,7 @@
                 ...document.querySelectorAll('.app-card'), 
                 ...document.querySelectorAll('.category-card')
             ];
-            
+
             const handleSearch = () => {
                 const query = searchInput.value.trim().toLowerCase();
                 let totalResultsFound = 0;
@@ -354,7 +355,7 @@
 
             // நிகழ் நேர வடிகட்டுதல் (Real-time filtering)
             searchInput.addEventListener('input', handleSearch);
-            
+
             // படிவச் சமர்ப்பிப்பைத் தடுத்தல்
             searchInput.closest('form').addEventListener('submit', (e) => {
                 e.preventDefault();
