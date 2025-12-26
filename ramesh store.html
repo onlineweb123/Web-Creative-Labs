@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Store</title>
+
+<style>
+:root{
+  --bg:#f4f6f8;
+  --card:#ffffff;
+  --primary:#2d3436;
+  --accent:#0984e3;
+  --border:#e0e0e0;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family: system-ui, sans-serif;
+  background:var(--bg);
+  color:var(--primary);
+  padding-bottom:120px;
+}
+
+/* HEADER */
+header{
+  background:#013faa;
+  color:white;
+  padding:28px 16px;
+  text-align:center;
+  font-size:26px;
+  font-weight:800;
+  box-shadow:0 6px 18px rgba(0,0,0,0.25);
+}
+
+/* Container */
+.container{
+  padding:14px;
+  max-width:480px;
+  margin:auto;
+}
+
+/* Search */
+.search-box input{
+  width:100%;
+  padding:12px 16px;
+  border-radius:22px;
+  border:1px solid var(--border);
+  font-size:15px;
+}
+
+/* Product Card */
+.product{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  margin-top:12px;
+  display:flex;
+  justify-content:space-between;
+  box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+.product-name{font-weight:600;}
+.product-price{color:var(--accent);font-weight:700;}
+
+/* Order Button */
+.order-btn{
+  position:fixed;
+  bottom:14px;
+  left:50%;
+  transform:translateX(-50%);
+  width:92%;
+  max-width:420px;
+  background:#000be6;
+  color:white;
+  border-radius:30px;
+  padding:16px;
+  font-size:16px;
+  font-weight:700;
+  text-align:center;
+  text-decoration:none;
+  box-shadow:0 8px 18px rgba(0,0,0,0.25);
+}
+
+/* 🔵 Floating Buttons (Common) */
+.float-btn{
+  position:fixed;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:24px;
+  text-decoration:none;
+  box-shadow:0 8px 18px rgba(0,0,0,0.25);
+}
+
+/* 🌐 Website → LEFT */
+.website-btn{
+  left:16px;
+  bottom:120px;
+  background:#6c5ce7;
+}
+
+/* 📍 Location → RIGHT */
+.location-btn{
+  right:16px;
+  bottom:120px;
+  background:#00b894;
+}
+</style>
+</head>
+
+<body>
+
+<header>🏪 Ramesh மல்லிகை கடை</header>
+
+<div class="container">
+
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Search பொருள் / Product name">
+  </div>
+
+  <div class="product" data-ta="அரிசி" data-en="rice">
+    <div class="product-name">அரிசி (1 Kg)</div>
+    <div class="product-price">₹60</div>
+  </div>
+
+  <div class="product" data-ta="சர்க்கரை" data-en="sugar">
+    <div class="product-name">சர்க்கரை (1 Kg)</div>
+    <div class="product-price">₹45</div>
+  </div>
+
+  <div class="product" data-ta="எண்ணெய்" data-en="oil">
+    <div class="product-name">சமையல் எண்ணெய் (1 L)</div>
+    <div class="product-price">₹170</div>
+  </div>
+
+</div>
+
+<!-- 🌐 Website Floating Button (LEFT) -->
+<a href="https://onlineweb123.github.io/Relax-To-Orders/"
+   target="_blank"
+   class="float-btn website-btn">🌐</a>
+
+<!-- 📍 Location Floating Button (RIGHT) -->
+<a href="https://www.google.com/maps?q=Ramesh+Maligai+Store"
+   target="_blank"
+   class="float-btn location-btn">📍</a>
+
+<!-- Order Button -->
+<a href="https://onlineweb123.github.io/Relax-To-Orders/"
+   target="_blank"
+   class="order-btn">🛒 Order Now</a>
+
+<script>
+const search = document.getElementById("search");
+const products = document.querySelectorAll(".product");
+
+search.addEventListener("input", ()=>{
+  const value = search.value.toLowerCase();
+  products.forEach(p=>{
+    const ta = p.dataset.ta.toLowerCase();
+    const en = p.dataset.en.toLowerCase();
+    p.style.display =
+      (ta.includes(value) || en.includes(value)) ? "flex" : "none";
+  });
+});
+</script>
+
+</body>
+</html>
